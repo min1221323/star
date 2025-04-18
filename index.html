@@ -46,45 +46,34 @@
 </head>
 <body>
   <h1>서울 계절별 별자리</h1>
-  <p>계절을 선택하면 해당 계절의 별자리와 목록을 볼 수 있어요!</p>
+  <p>계절을 선택하면 해당 계절에 볼 수 있는 별자리를 확인할 수 있어요!</p>
 
-  <button onclick="showSeasonSky('spring')">봄</button>
-  <button onclick="showSeasonSky('summer')">여름</button>
-  <button onclick="showSeasonSky('autumn')">가을</button>
-  <button onclick="showSeasonSky('winter')">겨울</button>
+  <button onclick="showSeason('spring')">봄</button>
+  <button onclick="showSeason('summer')">여름</button>
+  <button onclick="showSeason('autumn')">가을</button>
+  <button onclick="showSeason('winter')">겨울</button>
 
   <div id="starmap"></div>
-
   <div id="constellations-list"></div>
 
   <script>
-    const constellationData = {
+    const constellationList = {
       spring: ['사자자리 (Leo)', '처녀자리 (Virgo)', '목동자리 (Boötes)'],
-      summer: ['거문고자리 (Lyra)', '독수리자리 (Aquila)', '백조자리 (Cygnus)'],
+      summer: ['거문고자리 (Lyra)', '백조자리 (Cygnus)', '독수리자리 (Aquila)'],
       autumn: ['페가수스자리 (Pegasus)', '물고기자리 (Pisces)', '양자리 (Aries)'],
       winter: ['오리온자리 (Orion)', '큰개자리 (Canis Major)', '쌍둥이자리 (Gemini)']
     };
 
-    function showSeasonSky(season) {
-      let date;
-      switch(season) {
-        case 'spring':
-          date = new Date('2025-03-21T21:00:00');
-          break;
-        case 'summer':
-          date = new Date('2025-06-21T21:00:00');
-          break;
-        case 'autumn':
-          date = new Date('2025-09-23T21:00:00');
-          break;
-        case 'winter':
-          date = new Date('2025-12-21T21:00:00');
-          break;
-      }
+    const seasonToDate = {
+      spring: '2025-03-21T21:00:00',
+      summer: '2025-06-21T21:00:00',
+      autumn: '2025-09-23T21:00:00',
+      winter: '2025-12-21T21:00:00'
+    };
 
-      // 별자리 지도 초기화
+    function showSeason(season) {
+      // 별자리 지도 업데이트
       document.getElementById("starmap").innerHTML = "";
-
       virtualsky({
         id: "starmap",
         latitude: 37.5665,
@@ -97,32 +86,27 @@
         cardinalpoints: true,
         constellations: true,
         live: false,
-        date: date.toISOString()
+        date: new Date(seasonToDate[season]).toISOString()
       });
 
       // 별자리 목록 표시
-      const list = constellationData[season]
+      const listItems = constellationList[season]
         .map(name => `<li>${name}</li>`)
         .join('');
       document.getElementById("constellations-list").innerHTML = `
-        <h2>${seasonToKorean(season)} 대표 별자리</h2>
-        <ul style="list-style: none; padding: 0;">${list}</ul>
+        <h2>${getSeasonName(season)}에 볼 수 있는 별자리</h2>
+        <ul style="list-style: none; padding: 0;">${listItems}</ul>
       `;
     }
 
-    function seasonToKorean(season) {
+    function getSeasonName(season) {
       return {
-        spring: "봄",
-        summer: "여름",
-        autumn: "가을",
-        winter: "겨울"
+        spring: '봄',
+        summer: '여름',
+        autumn: '가을',
+        winter: '겨울'
       }[season];
     }
-
-    // 기본으로 봄 별자리 표시
-    window.onload = () => {
-      showSeasonSky('spring');
-    };
   </script>
 </body>
 </html>
