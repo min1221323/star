@@ -8,7 +8,7 @@
   <style>
     body {
       text-align: center;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       background-color: black;
       color: white;
       margin: 0;
@@ -17,7 +17,7 @@
     }
 
     button {
-      font-size: 1.2rem;
+      font-size: 1rem;
       margin: 10px;
       padding: 10px 20px;
       border: none;
@@ -37,16 +37,20 @@
       margin-top: 20px;
     }
 
-    #constellations-list {
+    #constellations {
       margin-top: 20px;
-      font-size: 1.2rem;
-      line-height: 2;
+      font-size: 1.1rem;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
     }
   </style>
 </head>
 <body>
   <h1>서울 계절별 별자리</h1>
-  <p>계절을 선택하면 해당 계절에 볼 수 있는 별자리를 확인할 수 있어요!</p>
+  <p>계절을 선택하면 별자리 지도와 목록이 보여요!</p>
 
   <button onclick="showSeason('spring')">봄</button>
   <button onclick="showSeason('summer')">여름</button>
@@ -54,7 +58,7 @@
   <button onclick="showSeason('winter')">겨울</button>
 
   <div id="starmap"></div>
-  <div id="constellations-list"></div>
+  <div id="constellations"></div>
 
   <script>
     const constellationList = {
@@ -71,17 +75,14 @@
       winter: '2025-12-21T21:00:00'
     };
 
-    let sky; // VirtualSky 인스턴스 변수
+    let sky;
 
     function showSeason(season) {
       const date = new Date(seasonToDate[season]);
 
-      // 기존 sky 인스턴스가 있다면 제거하고 새로 생성
-      if (sky) {
-        document.getElementById("starmap").innerHTML = ""; // 초기화
-      }
+      // 별자리 지도 초기화 및 다시 로드
+      document.getElementById("starmap").innerHTML = "";
 
-      // 새 인스턴스 생성
       sky = new VirtualSky({
         id: "starmap",
         latitude: 37.5665,
@@ -98,12 +99,13 @@
       });
 
       // 별자리 목록 출력
-      const listItems = constellationList[season]
+      const list = constellationList[season]
         .map(name => `<li>${name}</li>`)
         .join('');
-      document.getElementById("constellations-list").innerHTML = `
+
+      document.getElementById("constellations").innerHTML = `
         <h2>${getSeasonName(season)}에 볼 수 있는 별자리</h2>
-        <ul style="list-style: none; padding: 0;">${listItems}</ul>
+        <ul>${list}</ul>
       `;
     }
 
