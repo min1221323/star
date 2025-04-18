@@ -71,10 +71,18 @@
       winter: '2025-12-21T21:00:00'
     };
 
+    let sky; // VirtualSky 인스턴스 변수
+
     function showSeason(season) {
-      // 별자리 지도 업데이트
-      document.getElementById("starmap").innerHTML = "";
-      virtualsky({
+      const date = new Date(seasonToDate[season]);
+
+      // 기존 sky 인스턴스가 있다면 제거하고 새로 생성
+      if (sky) {
+        document.getElementById("starmap").innerHTML = ""; // 초기화
+      }
+
+      // 새 인스턴스 생성
+      sky = new VirtualSky({
         id: "starmap",
         latitude: 37.5665,
         longitude: 126.9780,
@@ -86,10 +94,10 @@
         cardinalpoints: true,
         constellations: true,
         live: false,
-        date: new Date(seasonToDate[season]).toISOString()
+        date: date.toISOString()
       });
 
-      // 별자리 목록 표시
+      // 별자리 목록 출력
       const listItems = constellationList[season]
         .map(name => `<li>${name}</li>`)
         .join('');
